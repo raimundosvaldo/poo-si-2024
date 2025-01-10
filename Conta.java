@@ -1,4 +1,4 @@
-package pacote1;
+package gestaocontas;
 
 public class Conta {
 
@@ -6,15 +6,14 @@ public class Conta {
 	private Cliente titular;
 	private double saldo;
 	private int senha;
-	private Lancamento[] historico;
-	private int ultimoLancamento;
+	private HistoricoDeLancamentos historico;
 
 	public Conta(int numero, Cliente titular, double saldo, int senha) {
 		this.numero = numero;
 		this.titular = titular;
 		this.saldo = saldo;
 		this.senha = senha;
-		this.historico = new Lancamento[11];
+		this.historico = new HistoricoDeLancamentos();
 	}
 
 	public int getNumero() {
@@ -35,7 +34,7 @@ public class Conta {
 	public boolean creditaValor(double valor, String descricao) {
 		if (valor >= 0) {
 			this.saldo += valor;
-			this.registraLancamento(valor, descricao);
+			historico.registraLancamento(valor, descricao);
 			return true;
 		}
 		return false;
@@ -44,22 +43,17 @@ public class Conta {
 	public boolean debitaValor(double valor, int senha, String descricao) {
 		if (this.senha == senha && valor <= this.saldo && valor > 0) {
 			this.saldo -= valor;
-			this.registraLancamento(-valor, descricao);
+			historico.registraLancamento(-valor, descricao);
 			return true;
 		}
 		return false;
 	}
-
-	private void registraLancamento(double valor, String descricao) {
-		if (this.ultimoLancamento == this.historico.length) {
-			for (int i = 0; i < this.historico.length; i++) {
-				this.historico[i] = this.historico[i + 1];
-			}
-		} else {
-			this.ultimoLancamento++;
+	
+	public String verificaHistoricoDeLancamentos(int senha) {
+		if(this.senha == senha) {
+			return this.historico.geraHistoricoDeLancamentos();
 		}
-		this.historico[this.ultimoLancamento] = new Lancamento(descricao, valor);
-
+		return null;
 	}
 
 }

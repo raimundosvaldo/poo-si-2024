@@ -1,4 +1,4 @@
-package pacote1;
+package gestaocontas;
 
 public class Cliente {
 
